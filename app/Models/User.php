@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Followable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +18,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use Followable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'avatar'
     ];
 
     /**
@@ -58,4 +62,49 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function getAvatarAttribute($value)
+    {
+        if(isset($value)) {
+
+            return asset('storage/' . $value );
+
+        } else {
+
+            return asset('images/default-avatar.jpeg');
+        }
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function timeline()
+    {
+        $friends = $this->follows()->pluck('id');
+
+        return Tweet::whereIn('user_id', $friends)
+            ->orWhere('user_id', $this->id)
+            ->withLikes()
+            ->latest()
+            ->get();
+    }
+
+    public function tweets()
+    {
+        return $this->hasMany(Tweet::class)->latest();
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function path($append = '')
+    {
+        $path = route('profile', $this->username);
+
+        return $append ? "{$path}/{$append}" : $path;
+    }
 }

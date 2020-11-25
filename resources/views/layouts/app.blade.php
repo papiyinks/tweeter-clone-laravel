@@ -20,23 +20,40 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-dropdown')
+            <section class="px-8 py-4 mb-6">
+                @livewire('navigation-dropdown')
+            </section>
 
             <!-- Page Heading -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <section class="px-8">
+                <main class="container mx-auto">
+                    <div class="lg:flex lg:justify-between">
+                        <div class="lg:w-32">
+                            @auth
+                                @include ('_sidebar-links')
+                            @endauth
+                        </div>
+
+                        <div class="lg:flex-1 lg:mx-10" style="max-width: 700px;">
+                            {{ $slot }}
+                        </div>
+
+                        <div class="lg:w-1/6 bg-blue-100 rounded-lg p-4">
+                            @auth
+                                @include ('_friends-list')
+                            @endauth
+                        </div>
+                    </div>
+                </main>
+            </section>
         </div>
 
         @stack('modals')
 
         @livewireScripts
+
+        <script src="http://unpkg.com/turbolinks"></script>
     </body>
 </html>
