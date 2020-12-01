@@ -16,9 +16,22 @@
                 {{ $tweet->user->name }}
             </a>
         </h5>
-        <p class="'text-sm">
-            {{ $tweet->body }}
-        </p>
+
+        @if ($tweet->image)
+            <div class="mb-4" style="width: 600px; height: 400px">
+                <img
+                    src="{{ $tweet->image }}"
+                    alt="tweet image"
+                    style="width: 100%; height: 100%; object-fit: cover; display: block"
+                >
+            </div>
+        @endif
+
+        @if ($tweet->body)
+            <p class="my-2 text-sm">
+                {{ $tweet->body }}
+            </p>
+        @endif
 
         @auth
             <x-like-buttons :tweet="$tweet" />

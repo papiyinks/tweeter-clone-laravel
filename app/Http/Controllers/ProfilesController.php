@@ -36,12 +36,17 @@ class ProfilesController extends Controller
             'username' => [ 'string', 'required', 'max:255', 'alpha_dash', Rule::unique('users')->ignore($user)],
             'name' => ['string', 'required', 'max:255'],
             'avatar' => ['file'],
+            'banner' => ['file'],
+            'description' => ['string'],
             'email' => ['string', 'required', 'email', 'max:255', Rule::unique('users')->ignore($user)],
-            'password' => ['string', 'required', 'min:8', 'max:255', 'confirmed']
         ]);
 
         if (request('avatar')) {
             $attributes['avatar'] = request('avatar')->store('avatars');
+        }
+
+        if (request('banner')) {
+            $attributes['banner'] = request('banner')->store('banners');
         }
 
 

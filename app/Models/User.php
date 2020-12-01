@@ -30,7 +30,9 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
-        'avatar'
+        'avatar',
+        'banner',
+        'description'
     ];
 
     /**
@@ -72,6 +74,18 @@ class User extends Authenticatable
         } else {
 
             return asset('images/default-avatar.jpeg');
+        }
+    }
+
+    public function getBannerAttribute($image)
+    {
+        if(isset($image)) {
+
+            return asset('storage/' . $image );
+
+        } else {
+
+            return asset('images/default-banner.jpg');
         }
     }
 
